@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sprite Animation Test</title>
+<style>
+  body { background: #222; display: flex; justify-content: center; align-items: center; height: 100vh; }
+  canvas { background: #333; }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas" width="200" height="200"></canvas>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const sprite = new Image();
+sprite.src = 'sprite.png'; // Replace with your sprite strip filename
+
+// Sprite settings
+const frameWidth = 64;   // width of each frame
+const frameHeight = 64;  // height of each frame
+const totalFrames = 10;  // number of frames in your strip
+let currentFrame = 0;
+const fps = 10;          // frames per second
+let frameTimer = 0;
+const frameInterval = 1000 / fps;
+
+let lastTime = 0;
+
+function animate(timestamp) {
+    const deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
+    frameTimer += deltaTime;
+
+    if (frameTimer >= frameInterval) {
+        currentFrame = (currentFrame + 1) % totalFrames;
+        frameTimer = 0;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(
+        sprite,
+        currentFrame * frameWidth, 0, frameWidth, frameHeight,
+        50, 50, frameWidth, frameHeight
+    );
+
+    requestAnimationFrame(animate);
+}
+
+sprite.onload = () => {
+    requestAnimationFrame(animate);
+};
+</script>
+
+</body>
+</html>
